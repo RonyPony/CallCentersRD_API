@@ -78,7 +78,9 @@ public class UserAuthController :ControllerBase
     [HttpPost]
     public async Task<ActionResult<User>> PostUser(registerUserDto userDto)
     {
-        User user = new User();
+        try
+        {
+            User user = new User();
         user.Email = userDto.email;
         user.Name = userDto.name;
         user.Password = userDto.password;   
@@ -89,6 +91,11 @@ public class UserAuthController :ControllerBase
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500,e);
+        }
     }
 
     // POST: api/LoginUser
