@@ -1,6 +1,7 @@
 ﻿using CallCentersRD_API.Data.Entities;
 using CallCentersRD_API.Database;
 using CallCentersRD_API.dto;
+using CallCentersRD_API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -72,12 +73,11 @@ namespace CallCentersRD_API.Controllers
         // POST: api/Preguntas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Pregunta>> PostUser(Pregunta pregunta)
+        public async Task<ActionResult<Pregunta>> PostPregunta(Pregunta pregunta)
         {
             pregunta.creationDate = DateTime.Now;
             _context.Preguntas.Add(pregunta);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction(nameof(GetUser), new { id = pregunta.Id }, pregunta);
         }
 

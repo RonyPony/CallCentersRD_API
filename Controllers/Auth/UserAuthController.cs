@@ -76,8 +76,13 @@ public class UserAuthController :ControllerBase
     // POST: api/Users
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<User>> PostUser(User user)
+    public async Task<ActionResult<User>> PostUser(registerUserDto userDto)
     {
+        User user = new User();
+        user.Email = userDto.email;
+        user.Name = userDto.name;
+        user.Password = userDto.password;   
+        user.LastName = userDto.lastName;
         user.lastLogin = DateTime.Now;
         user.CreatedAt = DateTime.Now;
         _context.Users.Add(user);
