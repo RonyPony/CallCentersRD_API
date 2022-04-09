@@ -80,7 +80,7 @@ public class UserAuthController :ControllerBase
     {
         try
         {
-            User user = new User();
+        User user = new User();
         user.Email = userDto.email;
         user.Name = userDto.name;
         user.Password = userDto.password;   
@@ -94,7 +94,8 @@ public class UserAuthController :ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500,e);
+            //return StatusCode(500,e);
+            return Ok(e);
         }
     }
 
