@@ -75,18 +75,35 @@ public class UserAuthController :ControllerBase
 
     // POST: api/Users
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<ActionResult<User>> PostUser(registerUserDto userDto)
     {
         try
         {
-        User user = new User();
+            if (userDto==null)
+            {
+                return BadRequest("Please include user info");
+            }
+            var userInfo = _context.Users.Where(b => b.Email == userDto.email).FirstOrDefault();
+
+            if (userDto.password.Length<8)
+            {
+                return BadRequest("Password Length must be greater than 8 chars");
+            }
+
+        if (userInfo != null)
+            {
+                return BadRequest("This email is already registered");
+            }
+
+            User user = new User();
         user.Email = userDto.email;
         user.Name = userDto.name;
         user.Password = userDto.password;   
         user.LastName = userDto.lastName;
         user.lastLogin = DateTime.Now;
         user.CreatedAt = DateTime.Now;
+            user.RegistrationDate = DateTime.Now;
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
@@ -129,12 +146,12 @@ public class UserAuthController :ControllerBase
 
     // DELETE: api/Users/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(long id)
+    public async Task<IActionResult> DeleteUser(int id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
-            return NotFound();
+            return NotFound("User does not exist");
         }
 
         _context.Users.Remove(user);
