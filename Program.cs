@@ -8,11 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<CallCenterDbContext>(opt =>
-{
-    //opt.UseInMemoryDatabase("users");
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections"));
-});
+//builder.Services.AddDbContext<CallCenterDbContext>(opt =>
+//{
+//    //opt.UseInMemoryDatabase("users");
+//    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections"));
+//})
+
+    builder.Services.AddDbContextPool<CallCenterDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections"),
+        sqlServerOptionsAction: options => { options.EnableRetryOnFailure(); }
+        ));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,6 +24,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 //if (app.Environment.IsDevelopment())
+
 //{
 //    app.UseExceptionHandler("/error-development");
 //}
