@@ -14,7 +14,7 @@ builder.Services.AddControllers();
 //    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections"));
 //})
 
-    builder.Services.AddDbContextPool<CallCenterDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections"),
+    builder.Services.AddDbContextPool<CallCenterDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnectionString"),
         sqlServerOptionsAction: options => { options.EnableRetryOnFailure(); }
         ));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
