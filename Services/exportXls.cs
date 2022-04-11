@@ -1,9 +1,13 @@
-﻿using IronXL;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
+using System.Text;
 
 namespace CallCentersRD_API.Services
 {
     public class exportXls
     {
+
         public byte[] exportToExcel(List<Database.Entities.Auth.User> userList)
         {
             try
@@ -37,19 +41,59 @@ namespace CallCentersRD_API.Services
                 //return wb.ToByteArray();
 
 
-                // Step 1: Create a DataSet, and put some sample data in it
-                DataSet ds = CreateSampleData();
+                //// Step 1: Create a DataSet, and put some sample data in it
+                //DataSet ds = CreateSampleData();
 
-                // Step 2: Create the Excel .xlsx file
-                try
+                //// Step 2: Create the Excel .xlsx file
+                //try
+                //{
+                //    CreateExcelFile.CreateExcelDocument(ds, "C:\\Sample.xlsx");
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show("Couldn't create Excel file.\r\nException: " + ex.Message);
+                //    return;
+                //}
+
+
+
+
+
+                //StringBuilder str = new StringBuilder();
+                //str.Append("<table border=`" + "1px" + "`b>");
+                //str.Append("<tr>");
+                //str.Append("<td><b><font face=Arial Narrow size=3>FName</font></b></td>");
+                //str.Append("<td><b><font face=Arial Narrow size=3>LName</font></b></td>");
+                //str.Append("<td><b><font face=Arial Narrow size=3>Address</font></b></td>");
+                //str.Append("</tr>");
+                //foreach (Record val in obj)
+                //{
+                //    str.Append("<tr>");
+                //    str.Append("<td><font face=Arial Narrow size=" + "14px" + ">" + val.FName.ToString() + "</font></td>");
+
+
+                var memoryStream = new MemoryStream();
+
+                using (ExcelPackage package = new ExcelPackage(memoryStream))
                 {
-                    CreateExcelFile.CreateExcelDocument(ds, "C:\\Sample.xlsx");
+                    ExcelWorksheet worksheet;
+                    worksheet = package.Workbook.Worksheets.Add("xxx");
+
+                    worksheet.Name = "jodon";
+
+                    //for (int i = 0; i < 50; i++)
+                    //{
+                    //    worksheet.Cells[1, i + 1].Value = nameColumns[i];
+                    //}
+
+                    package.Save();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Couldn't create Excel file.\r\nException: " + ex.Message);
-                    return;
-                }
+
+                memoryStream.Position = 0;
+                var contentType = "application/octet-stream";
+                var fileName = "fileName.xlsx";
+                 //File fff = new File(memoryStream, contentType, fileName);
+                return memoryStream.ToArray();
 
             }
             catch (Exception e)
