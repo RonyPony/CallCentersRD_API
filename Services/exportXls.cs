@@ -14,7 +14,7 @@ namespace CallCentersRD_API.Services
                 wb.Metadata.Author = "Ronel Cruz Ceballos (RONEL.CRUZ.A8@GMAIL.COM)";
                 wb.Metadata.Title = "CallCentersRD";
                 WorkSheet ws1 = wb.CreateWorkSheet("Usuarios");
-                WorkSheet ws2 = wb.CreateWorkSheet("Preguntas");
+                //WorkSheet ws2 = wb.CreateWorkSheet("Preguntas");
                 ws1["A1"].Value = "ID del usuario";                
                 ws1["B1"].Value = "Nombre del usuario";
                 ws1["C1"].Value = "Apellidos";
