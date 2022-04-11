@@ -39,6 +39,7 @@ namespace CallCentersRD_API.Services
             }
             catch (Exception e)
             {
+                throw e;
                 return null;
             }
         }
