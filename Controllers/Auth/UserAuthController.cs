@@ -105,8 +105,14 @@ public class UserAuthController :ControllerBase
             user.RegistrationDate = DateTime.Now;
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            var finalInfo = new userInfoDto()
+            {
+                name = user.Name,
+                email = user.Email,
+                lastName = user.LastName,
+            };
+            //return Ok(finalInfo);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, finalInfo);
         }
         catch (Exception e)
         {
@@ -131,7 +137,13 @@ public class UserAuthController :ControllerBase
         }
         if (userInfo.Password == user.UserPassword)
         {
-            return Ok(userInfo);
+            userInfoDto finalInfo = new userInfoDto()
+            {
+                name = userInfo.Name,
+                email = userInfo.Email,
+                lastName = userInfo.LastName,
+            };
+            return Ok(finalInfo);
         }
         else
         {
