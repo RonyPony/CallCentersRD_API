@@ -23,5 +23,4 @@ public class User
 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    public DateTime lastLogin { get; set; }
 }

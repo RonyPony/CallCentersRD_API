@@ -101,7 +101,6 @@ public class UserAuthController :ControllerBase
         user.Name = userDto.name;
         user.Password = userDto.password;   
         user.LastName = userDto.lastName;
-        user.lastLogin = DateTime.Now;
         user.CreatedAt = DateTime.Now;
             user.RegistrationDate = DateTime.Now;
         _context.Users.Add(user);
@@ -132,9 +131,6 @@ public class UserAuthController :ControllerBase
         }
         if (userInfo.Password == user.UserPassword)
         {
-            userInfo.lastLogin = DateTime.Now;
-            _context.Users.Add(userInfo);
-            await _context.SaveChangesAsync();
             return Ok(userInfo);
         }
         else
