@@ -26,9 +26,57 @@ namespace CallCentersRD_API.Controllers
             return await _context.Preguntas.ToListAsync();
         }
 
+
+        // GET: api/oneQuestion
+        [HttpGet("oneQuestion")]
+        public async Task<ActionResult<Pregunta>> GetOneQuestion(int userId)
+        {
+            List<Pregunta> preguntas = await _context.Preguntas.ToListAsync();
+            List<QuestionResponse>respuestas =await _context.Responses.ToListAsync();
+            List<int> questionsMadeToThisUserId = new List<int>();
+            List<int> allQuestionsId = new List<int>();
+            foreach (QuestionResponse resp in respuestas)
+            {
+                if (resp.userId == userId)
+                {
+                    questionsMadeToThisUserId.Add(resp.questionId);
+                }
+            }
+            foreach (Pregunta preg in preguntas)
+            {
+                allQuestionsId.Add(preg.Id);
+            }
+
+            if (questionsMadeToThisUserId.Count()>=10)
+            {
+                return Unauthorized("This user has already completed the 10 questions.");
+            }
+            Pregunta selectedQuestion = getArandomQuestion(preguntas, questionsMadeToThisUserId);
+            
+
+            return selectedQuestion;
+        }
+
+        private Pregunta getArandomQuestion(List<Pregunta>preguntas,List<int>questionsMade)
+        {
+            Pregunta finalQuestion = new Pregunta();
+            Random rnd = new Random();
+            int r = rnd.Next(preguntas.Count);
+            finalQuestion = preguntas[r];
+            while (questionsMade.Contains(finalQuestion.Id))
+            {
+                Random rnd2 = new Random();
+                int r2 = rnd.Next(preguntas.Count);
+                finalQuestion = preguntas[r2];
+                
+            }
+            return finalQuestion;
+            
+        }
+
         // GET: api/Preguntas/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pregunta>> GetUser(long id)
+        public async Task<ActionResult<Pregunta>> GetPregunta(int id)
         {
             var Pregunta = await _context.Preguntas.FindAsync(id);
 
@@ -43,14 +91,14 @@ namespace CallCentersRD_API.Controllers
         // PUT: api/Preguntas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(long id, Pregunta Pregunta)
+        public async Task<IActionResult> PutPregunta(Pregunta Pregunta)
         {
-            if (id != Pregunta.Id)
+            if (Pregunta==null)
             {
                 return BadRequest();
             }
 
-            //_context.Entry(Pregunta).State = EntityState.Modified;
+            _context.Entry(Pregunta).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +106,7 @@ namespace CallCentersRD_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!PreguntaExists(Pregunta.Id))
                 {
                     return NotFound();
                 }
@@ -68,7 +116,7 @@ namespace CallCentersRD_API.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(Pregunta);
         }
 
         // POST: api/Preguntas
@@ -86,13 +134,13 @@ namespace CallCentersRD_API.Controllers
             pregunta.creationDate = DateTime.Now;
             _context.Preguntas.Add(pregunta);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetUser), new { id = pregunta.Id }, pregunta);
+            return CreatedAtAction(nameof(GetPregunta), new { id = pregunta.Id }, pregunta);
         }
 
         
         // DELETE: api/Preguntas/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(long id)
+        public async Task<IActionResult> DeletePregunta(int id)
         {
             var Pregunta = await _context.Preguntas.FindAsync(id);
             if (Pregunta == null)
@@ -103,10 +151,10 @@ namespace CallCentersRD_API.Controllers
             _context.Preguntas.Remove(Pregunta);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Deleted");
         }
 
-        private bool UserExists(long id)
+        private bool PreguntaExists(int id)
         {
             return _context.Preguntas.Any(e => e.Id == id);
         }

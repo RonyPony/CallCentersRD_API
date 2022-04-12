@@ -13,5 +13,7 @@ namespace CallCentersRD_API.Database
 
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Pregunta> Preguntas { get; set; } = null!;
+        public DbSet<QuestionResponse>Responses { get; set; } = null!;
+
     }
 }
