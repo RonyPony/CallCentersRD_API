@@ -14,6 +14,7 @@ builder.Services.AddCors(options =>
                       policy =>
                       {
                           policy.WithOrigins("http://localhost:4200",
+                              "https://callcentersrd.web.app",
                                               "https://localhost:4200").AllowAnyHeader()
                                                   .AllowAnyMethod();
                       });
