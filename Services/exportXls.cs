@@ -10,7 +10,7 @@ namespace CallCentersRD_API.Services
 
         public byte[] exportToExcel(List<Database.Entities.Auth.User> userList)
         {
-            String[] var = { "",""};
+            String[] headers = { "ID","Nombre"};
             try
             {
                 var memoryStream = new MemoryStream();
@@ -22,10 +22,10 @@ namespace CallCentersRD_API.Services
 
                     worksheet.Name = "jodon";
 
-                    //for (int i = 0; i < 50; i++)
-                    //{
-                    //    worksheet.Cells[1, i + 1].Value = nameColumns[i];
-                    //}
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        worksheet.Cells[1, i + 1].Value = headers[i];
+                    }
 
                     package.Save();
                 }
