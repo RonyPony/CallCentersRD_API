@@ -1,4 +1,5 @@
-﻿using CallCentersRD_API.Data.Entities;
+﻿using CallCentersRD_API.Data.DTOs;
+using CallCentersRD_API.Data.Entities;
 using CallCentersRD_API.Database;
 using CallCentersRD_API.dto;
 using CallCentersRD_API.Services;
@@ -73,8 +74,15 @@ namespace CallCentersRD_API.Controllers
         // POST: api/Preguntas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Pregunta>> PostPregunta(Pregunta pregunta)
+        public async Task<ActionResult<Pregunta>> PostPregunta(questionDto preguntaDto)
         {
+            Pregunta pregunta = new Pregunta()
+            {
+                pregunta = preguntaDto.pregunta,
+                creationDate = DateTime.Now,
+                enable = preguntaDto.enable
+            };
+
             pregunta.creationDate = DateTime.Now;
             _context.Preguntas.Add(pregunta);
             await _context.SaveChangesAsync();

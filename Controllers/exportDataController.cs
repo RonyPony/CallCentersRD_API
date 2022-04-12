@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.IO;
+using CallCentersRD_API.Data.Entities;
 
 namespace CallCentersRD_API.Controllers
 {
@@ -23,8 +24,9 @@ namespace CallCentersRD_API.Controllers
         public async Task<FileContentResult> ExportInformation()
         {
             List<Database.Entities.Auth.User> usuarios= await _context.Users.ToListAsync();
+            List<Pregunta> preguntas = await _context.Preguntas.ToListAsync();
             exportXls export = new exportXls();
-            byte[] fileByte = export.exportToExcel(usuarios);
+            byte[] fileByte = export.exportToExcel(usuarios,preguntas);
             return new FileContentResult(fileByte, "application/octet-stream");
         }
 

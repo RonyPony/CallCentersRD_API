@@ -8,48 +8,43 @@ namespace CallCentersRD_API.Services
 {
     public class exportXls
     {
-
-        public byte[] exportToExcel(List<Database.Entities.Auth.User> userList)
+        public exportXls()
         {
-
-             string[] headers = {"ID","Nombre","Apellidos","Correo"};
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        }
+        public ExcelWorksheet readUsers(MemoryStream ms,string[]headers, List<Database.Entities.Auth.User> userList)
+        {
             try
             {
-                var memoryStream = new MemoryStream();
+                ExcelWorksheet userWorksheet;
 
-                using (ExcelPackage package = new ExcelPackage(memoryStream))
-                {
-                    ExcelWorksheet worksheet;
+                using (ExcelPackage package = new ExcelPackage(ms))
+                {                   
 
-                    worksheet = package.Workbook.Worksheets.Add("xxx");
+                    userWorksheet = package.Workbook.Worksheets.Add("xxx");
 
-                    worksheet.Name = "Usuarios";
+                    userWorksheet.Name = "Usuarios";
 
                     for (int i = 0; i < headers.Length; i++)
                     {
-                        worksheet.Cells[1, i + 1].Value = headers[i];
+                        userWorksheet.Cells[1, i + 1].Value = headers[i];
                     }
 
                     int j = 2;
 
                     foreach (var user in userList)
                     {
-                        worksheet.Cells[j,1].Value = user.Id;
-                        worksheet.Cells[j,2].Value = user.Name;
-                        worksheet.Cells[j,3].Value = user.LastName;
-                        worksheet.Cells[j, 4].Value = user.Email;
+                        userWorksheet.Cells[j, 1].Value = user.Id;
+                        userWorksheet.Cells[j, 2].Value = user.Name;
+                        userWorksheet.Cells[j, 3].Value = user.LastName;
+                        userWorksheet.Cells[j, 4].Value = user.Email;
                         j++;
                     }
 
                     package.Save();
                 }
 
-                memoryStream.Position = 0;
-                var contentType = "application/octet-stream";
-                var fileName = "fileName.xlsx";
-                 //File fff = new File(memoryStream, contentType, fileName);
-                return memoryStream.ToArray();
+                return userWorksheet;
 
             }
             catch (Exception e)
@@ -57,6 +52,66 @@ namespace CallCentersRD_API.Services
                 throw e;
                 return null;
             }
+        }
+
+        public ExcelWorksheet readQuestions(MemoryStream ms,string[] headers, List<Pregunta> questionsList)
+        {
+            try
+            {
+                var memoryStream = ms;
+                ExcelWorksheet questionsWorksheet;
+
+                using (ExcelPackage package = new ExcelPackage(memoryStream))
+                {
+                    
+
+                    questionsWorksheet = package.Workbook.Worksheets.Add("xxx2");
+
+                    questionsWorksheet.Name = "Preguntas";
+
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        questionsWorksheet.Cells[1, i + 1].Value = headers[i];
+                    }
+
+                    int j = 2;
+
+                    foreach (var user in questionsList)
+                    {
+                        questionsWorksheet.Cells[j, 1].Value = user.Id;
+                        questionsWorksheet.Cells[j, 2].Value = user.pregunta;
+                        questionsWorksheet.Cells[j, 3].Value = user.creationDate;
+                        questionsWorksheet.Cells[j, 4].Value = user.enable;
+                        j++;
+                    }
+
+                    package.Save();
+                }
+
+                
+                return questionsWorksheet;
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+                return null;
+            }
+        }
+        public byte[] exportToExcel(List<Database.Entities.Auth.User> userList,List<Pregunta>questionsList)
+        {
+            MemoryStream finalStream = new MemoryStream();
+            string[] userHeaders = {"ID","Nombre","Apellidos","Correo"};
+            string[] questionsHeaders = { "ID", "Pregunta", "Fecha de creacion", "Activa" };
+            ExcelWorksheet userData = readUsers(finalStream, userHeaders,userList);
+            ExcelWorksheet questionsData = readQuestions(finalStream, questionsHeaders, questionsList);
+            finalStream.Position = 0;
+            var contentType = "application/octet-stream";
+            var fileName = "fileName.xlsx";
+            //File fff = new File(memoryStream, contentType, fileName);
+            //finalStream.CopyTo(userData);
+            //finalStream.CopyTo(questionsData);
+            return finalStream.ToArray();
         }
     }
 }
