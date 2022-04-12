@@ -8,18 +8,22 @@ namespace CallCentersRD_API.Services
 {
     public class exportXls
     {
+        static MemoryStream ms;
+        ExcelPackage package;
         public exportXls()
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ms= new MemoryStream();
+            package = new ExcelPackage(ms);
         }
-        public ExcelWorksheet readUsers(MemoryStream ms,string[]headers, List<Database.Entities.Auth.User> userList)
+        public ExcelWorksheet readUsers(string[]headers, List<Database.Entities.Auth.User> userList)
         {
             try
             {
                 ExcelWorksheet userWorksheet;
 
-                using (ExcelPackage package = new ExcelPackage(ms))
-                {                   
+                //using (package)
+                //{                   
 
                     userWorksheet = package.Workbook.Worksheets.Add("xxx");
 
@@ -41,8 +45,8 @@ namespace CallCentersRD_API.Services
                         j++;
                     }
 
-                    package.Save();
-                }
+                    //package.Save();
+                //}
 
                 return userWorksheet;
 
@@ -54,16 +58,11 @@ namespace CallCentersRD_API.Services
             }
         }
 
-        public ExcelWorksheet readQuestions(MemoryStream ms,string[] headers, List<Pregunta> questionsList)
+        public ExcelWorksheet readQuestions(string[] headers, List<Pregunta> questionsList)
         {
             try
             {
-                var memoryStream = ms;
                 ExcelWorksheet questionsWorksheet;
-
-                using (ExcelPackage package = new ExcelPackage(memoryStream))
-                {
-                    
 
                     questionsWorksheet = package.Workbook.Worksheets.Add("xxx2");
 
@@ -81,12 +80,12 @@ namespace CallCentersRD_API.Services
                         questionsWorksheet.Cells[j, 1].Value = user.Id;
                         questionsWorksheet.Cells[j, 2].Value = user.pregunta;
                         questionsWorksheet.Cells[j, 3].Value = user.creationDate;
-                        questionsWorksheet.Cells[j, 4].Value = user.enable;
+                        questionsWorksheet.Cells[j, 4].Value = user.enable?"Si":"No";
                         j++;
                     }
 
-                    package.Save();
-                }
+                    
+                
 
                 
                 return questionsWorksheet;
@@ -100,18 +99,19 @@ namespace CallCentersRD_API.Services
         }
         public byte[] exportToExcel(List<Database.Entities.Auth.User> userList,List<Pregunta>questionsList)
         {
-            MemoryStream finalStream = new MemoryStream();
+            
             string[] userHeaders = {"ID","Nombre","Apellidos","Correo"};
             string[] questionsHeaders = { "ID", "Pregunta", "Fecha de creacion", "Activa" };
-            ExcelWorksheet userData = readUsers(finalStream, userHeaders,userList);
-            ExcelWorksheet questionsData = readQuestions(finalStream, questionsHeaders, questionsList);
-            finalStream.Position = 0;
+            ExcelWorksheet userData = readUsers(userHeaders,userList);
+            ExcelWorksheet questionsData = readQuestions(questionsHeaders, questionsList);
+            package.Save();
+            ms.Position = 0;
             var contentType = "application/octet-stream";
             var fileName = "fileName.xlsx";
             //File fff = new File(memoryStream, contentType, fileName);
             //finalStream.CopyTo(userData);
             //finalStream.CopyTo(questionsData);
-            return finalStream.ToArray();
+            return ms.ToArray();
         }
     }
 }
