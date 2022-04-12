@@ -6,16 +6,25 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddControllers();
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200",
+                                              "https://localhost:4200");
+                      });
+});
+
 //builder.Services.AddDbContext<CallCenterDbContext>(opt =>
 //{
 //    //opt.UseInMemoryDatabase("users");
 //    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnections"));
 //})
 
-    builder.Services.AddDbContextPool<CallCenterDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("someeDB"),
+builder.Services.AddDbContextPool<CallCenterDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("someeDB"),
         sqlServerOptionsAction: options => { options.EnableRetryOnFailure(); }
         ));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,7 +32,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+app.UseCors(MyAllowSpecificOrigins);
 //if (app.Environment.IsDevelopment())
 
 //{
@@ -37,7 +46,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
+app.UseSwagger();
     app.UseSwaggerUI();
 //}
 
