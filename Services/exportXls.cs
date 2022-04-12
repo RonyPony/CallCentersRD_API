@@ -2,6 +2,8 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 using System.Text;
 
 namespace CallCentersRD_API.Services
@@ -31,13 +33,27 @@ namespace CallCentersRD_API.Services
 
                     for (int i = 0; i < headers.Length; i++)
                     {
-                        userWorksheet.Cells[1, i + 1].Value = headers[i];
+                    userWorksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    userWorksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Orange);
+                    userWorksheet.Cells[1, i + 1].Value = headers[i];
                     }
 
                     int j = 2;
 
                     foreach (var user in userList)
                     {
+                        userWorksheet.Cells[j, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        userWorksheet.Cells[j, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+
+                        userWorksheet.Cells[j, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        userWorksheet.Cells[j, 2].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+
+                        userWorksheet.Cells[j, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        userWorksheet.Cells[j, 3].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+
+                        userWorksheet.Cells[j, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        userWorksheet.Cells[j, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+
                         userWorksheet.Cells[j, 1].Value = user.Id;
                         userWorksheet.Cells[j, 2].Value = user.Name;
                         userWorksheet.Cells[j, 3].Value = user.LastName;
@@ -70,13 +86,32 @@ namespace CallCentersRD_API.Services
 
                     for (int i = 0; i < headers.Length; i++)
                     {
-                        questionsWorksheet.Cells[1, i + 1].Value = headers[i];
+                    //ExcelFill excellFill=
+                    //questionsWorksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FF0000"));
+                    //questionsWorksheet.Column(1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#FF0000"));
+                    questionsWorksheet.Cells[1,i+1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    questionsWorksheet.Cells[1,i+1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Orange);
+                    questionsWorksheet.Cells[1, i + 1].Value = headers[i];
                     }
 
                     int j = 2;
 
                     foreach (var user in questionsList)
                     {
+                        questionsWorksheet.Cells[j, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        questionsWorksheet.Cells[j, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+
+                        questionsWorksheet.Cells[j, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        questionsWorksheet.Cells[j, 2].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+
+                        questionsWorksheet.Cells[j, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        questionsWorksheet.Cells[j, 3].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+
+                        questionsWorksheet.Cells[j, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        questionsWorksheet.Cells[j, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+
+                        questionsWorksheet.Cells[j, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        questionsWorksheet.Cells[j, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
                         questionsWorksheet.Cells[j, 1].Value = user.Id;
                         questionsWorksheet.Cells[j, 2].Value = user.pregunta;
                         questionsWorksheet.Cells[j, 3].Value = user.creationDate;
