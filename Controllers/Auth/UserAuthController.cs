@@ -139,6 +139,7 @@ public class UserAuthController :ControllerBase
         {
             userInfoDto finalInfo = new userInfoDto()
             {
+                Id = userInfo.Id,
                 name = userInfo.Name,
                 email = userInfo.Email,
                 lastName = userInfo.LastName,
