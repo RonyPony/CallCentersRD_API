@@ -111,6 +111,38 @@ namespace CallCentersRD_API.Controllers
             return Ok(questionResponse);
         }
 
+        // GET: api/responseCounter
+        [HttpGet("responseCounter")]
+        public async Task<ActionResult<UserResponseCount>> responseCounter(int userId)
+        {
+            List<Pregunta> preguntas = await _context.Preguntas.ToListAsync();
+            List<QuestionResponse> respuestas = await _context.Responses.ToListAsync();
+            List<int> questionsMadeToThisUserId = new List<int>();
+            List<int> allQuestionsId = new List<int>();
+            var totalQuestions = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AppSettings")["questionsAmount"];
+
+            foreach (QuestionResponse resp in respuestas)
+            {
+                if (resp.userId == userId)
+                {
+                    questionsMadeToThisUserId.Add(resp.questionId);
+                }
+            }
+            foreach (Pregunta preg in preguntas)
+            {
+                allQuestionsId.Add(preg.Id);
+            }
+
+            
+            UserResponseCount counts = new UserResponseCount()
+            {
+                answeredQuestions = questionsMadeToThisUserId.Count(),
+                notAnsweredQuestions= Convert.ToInt32(totalQuestions)- questionsMadeToThisUserId.Count(),
+            };
+
+            return counts;
+        }
+
 
         // DELETE: api/Response/5
         [HttpDelete("{id}")]

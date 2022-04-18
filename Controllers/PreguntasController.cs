@@ -35,6 +35,7 @@ namespace CallCentersRD_API.Controllers
             List<QuestionResponse>respuestas =await _context.Responses.ToListAsync();
             List<int> questionsMadeToThisUserId = new List<int>();
             List<int> allQuestionsId = new List<int>();
+            var totalQuestions = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AppSettings")["questionsAmount"];
             foreach (QuestionResponse resp in respuestas)
             {
                 if (resp.userId == userId)
@@ -47,15 +48,17 @@ namespace CallCentersRD_API.Controllers
                 allQuestionsId.Add(preg.Id);
             }
 
-            if (questionsMadeToThisUserId.Count()>=10)
+            if (questionsMadeToThisUserId.Count()>=Convert.ToInt32(totalQuestions))
             {
-                return Unauthorized("This user has already completed the 10 questions.");
+                return Unauthorized("This user has already completed the "+ Convert.ToInt32(totalQuestions) + " questions.");
             }
             Pregunta selectedQuestion = getArandomQuestion(preguntas, questionsMadeToThisUserId);
             
 
             return selectedQuestion;
         }
+
+        
 
         private Pregunta getArandomQuestion(List<Pregunta>preguntas,List<int>questionsMade)
         {
