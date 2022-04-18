@@ -111,5 +111,22 @@ namespace CallCentersRD_API.Controllers
             return Ok(questionResponse);
         }
 
+
+        // DELETE: api/Response/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteResponse(int id)
+        {
+            var response = await _context.Responses.FindAsync(id);
+            if (Response == null)
+            {
+                return NotFound();
+            }
+
+            _context.Responses.Remove(response);
+            await _context.SaveChangesAsync();
+
+            return Ok("Deleted");
+        }
+
     }
 }
