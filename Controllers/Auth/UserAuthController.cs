@@ -45,7 +45,7 @@ public class UserAuthController :ControllerBase
     // PUT: api/Users/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutUser(long id, User user)
+    public async Task<IActionResult> PutUser(int id, User user)
     {
         if (id != user.Id)
         {
@@ -56,6 +56,7 @@ public class UserAuthController :ControllerBase
 
         try
         {
+            _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -70,7 +71,7 @@ public class UserAuthController :ControllerBase
             }
         }
 
-        return NoContent();
+        return Ok("User info updated");
     }
 
     // POST: api/Users
