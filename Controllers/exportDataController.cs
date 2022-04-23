@@ -25,8 +25,9 @@ namespace CallCentersRD_API.Controllers
         {
             List<Database.Entities.Auth.User> usuarios= await _context.Users.ToListAsync();
             List<Pregunta> preguntas = await _context.Preguntas.ToListAsync();
+            List<QuestionResponse> respuestas = await _context.Responses.ToListAsync();
             exportXls export = new exportXls();
-            byte[] fileByte = export.exportToExcel(usuarios,preguntas);
+            byte[] fileByte = export.exportToExcel(usuarios,preguntas,respuestas);
             return new FileContentResult(fileByte, "application/octet-stream");
         }
 
