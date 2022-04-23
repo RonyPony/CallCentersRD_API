@@ -37,6 +37,29 @@ namespace CallCentersRD_API.Controllers
             return Ok(respuesta);
         }
 
+        // GET: api/responses/byUserId/5
+        [HttpGet("byUserId/{userId}")]
+        public async Task<ActionResult<List<QuestionResponse>>> GetUserResponses(int userId)
+        {
+            var respuestas = await _context.Responses.ToListAsync();
+            var users = await _context.Users.FindAsync(userId);
+            List<QuestionResponse> userResponses = new List<QuestionResponse>();
+            if (userId<=0 || users ==null)
+            {
+                return BadRequest();
+            }
+
+            foreach (QuestionResponse item in respuestas)
+            {
+                if (item.userId == userId)
+                {
+                    userResponses.Add(item);
+                }
+            }
+
+            return Ok(userResponses);
+        }
+
         // PUT: api/responses/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
