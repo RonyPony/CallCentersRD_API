@@ -20,7 +20,7 @@ namespace CallCentersRD_API.Controllers
 
         // POST: api/export
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpGet]
         public async Task<FileContentResult> ExportInformation()
         {
             List<Database.Entities.Auth.User> usuarios= await _context.Users.ToListAsync();
