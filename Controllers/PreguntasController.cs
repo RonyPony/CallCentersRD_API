@@ -140,7 +140,46 @@ namespace CallCentersRD_API.Controllers
             return CreatedAtAction(nameof(GetPregunta), new { id = pregunta.Id }, pregunta);
         }
 
-        
+
+        // POST: api/Preguntas/enable/{id}
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("enable/{id}")]
+        public async Task<ActionResult<Pregunta>> EnableQuestion(int id)
+        {
+            Pregunta pregunta = await _context.Preguntas.FindAsync(id);
+            if (!pregunta.enable)
+            {
+                pregunta.enable = true;
+                _context.Entry(pregunta).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return Ok("Question enabled succesfuly");
+            }
+            else
+            {
+                return BadRequest("This question was already active");
+            }
+        }
+
+        // POST: api/Preguntas/disable/{id}
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("disable/{id}")]
+        public async Task<ActionResult<Pregunta>> DisableQuestion(int id)
+        {
+            Pregunta pregunta = await _context.Preguntas.FindAsync(id);
+            if (pregunta.enable)
+            {
+                pregunta.enable = false;
+                _context.Entry(pregunta).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return Ok("Question disabled succesfuly");
+            }
+            else
+            {
+                return BadRequest("This question was already disabled");
+            }
+        }
+
+
         // DELETE: api/Preguntas/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePregunta(int id)
