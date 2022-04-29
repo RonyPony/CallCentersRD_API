@@ -42,6 +42,20 @@ public class UserAuthController :ControllerBase
         return user;
     }
 
+    // GET: api/Users/5/isAdmin
+    [HttpGet("{id}/isAdmin")]
+    public async Task<ActionResult<bool>> isUserAdmin(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        return user.IsAdmin;
+    }
+
     // PUT: api/Users/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
@@ -103,6 +117,7 @@ public class UserAuthController :ControllerBase
         user.Password = userDto.password;   
         user.LastName = userDto.lastName;
         user.CreatedAt = DateTime.Now;
+            user.IsAdmin = false;
             user.RegistrationDate = DateTime.Now;
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
