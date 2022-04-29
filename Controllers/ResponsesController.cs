@@ -180,7 +180,7 @@ namespace CallCentersRD_API.Controllers
             _context.Responses.Remove(response);
             await _context.SaveChangesAsync();
 
-            return Ok("Deleted");
+            return Ok();
         }
 
     }

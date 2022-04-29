@@ -171,7 +171,7 @@ namespace CallCentersRD_API.Controllers
                 pregunta.enable = false;
                 _context.Entry(pregunta).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return Ok("Question disabled succesfuly");
+                return Ok();
             }
             else
             {
@@ -193,7 +193,7 @@ namespace CallCentersRD_API.Controllers
             _context.Preguntas.Remove(Pregunta);
             await _context.SaveChangesAsync();
 
-            return Ok("Deleted");
+            return Ok();
         }
 
         private bool PreguntaExists(int id)

@@ -71,7 +71,7 @@ public class UserAuthController :ControllerBase
             }
         }
 
-        return Ok("User info updated");
+        return Ok();
     }
 
     // POST: api/Users
