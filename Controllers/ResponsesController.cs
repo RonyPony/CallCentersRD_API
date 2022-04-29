@@ -167,6 +167,30 @@ namespace CallCentersRD_API.Controllers
         }
 
 
+        // GET: api/hasUserCompletedQuestions/{userId}
+        [HttpGet("hasUserCompletedQuestions/{userId}")]
+        public async Task<ActionResult<bool>> hasUserCompletedQuestions(int userId)
+        {
+            List<Pregunta> preguntas = await _context.Preguntas.ToListAsync();
+            List<QuestionResponse> respuestas = await _context.Responses.ToListAsync();
+            List<int> questionsMadeToThisUserId = new List<int>();
+            List<int> allQuestionsId = new List<int>();
+            var totalQuestions = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AppSettings")["questionsAmount"];
+
+            foreach (QuestionResponse resp in respuestas)
+            {
+                if (resp.userId == userId)
+                {
+                    questionsMadeToThisUserId.Add(resp.questionId);
+                }
+            }
+
+            bool retunringValue = questionsMadeToThisUserId.Count()>=Convert.ToInt32(totalQuestions);
+
+            return retunringValue;
+        }
+
+
         // DELETE: api/Response/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteResponse(int id)
