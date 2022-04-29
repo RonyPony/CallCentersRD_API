@@ -152,7 +152,7 @@ namespace CallCentersRD_API.Controllers
                 pregunta.enable = true;
                 _context.Entry(pregunta).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return Ok("Question enabled succesfuly");
+                return Ok();
             }
             else
             {
